@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NotesFlow</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="home.css">
+</head>
+<body>
+  <div class="app-container">
+    <!-- Header with search and actions -->
+    <header class="app-header">
+      <div class="header-content">
+        <div class="logo">
+          <i class="fas fa-book-open"></i>
+          <h1>NotesFlow</h1>
+        </div>
+        
+        <div class="header-actions">
+          <div class="search-box">
+            <i class="fas fa-search"></i>
+            <input type="text" id="searchInput" placeholder="Search notes...">
+          </div>
+          
+          <div class="action-buttons">
+            <button id="addNoteBtn" class="btn primary">
+              <i class="fas fa-plus"></i>
+              <span>Add Note</span>
+            </button>
+            <button id="addCategoryBtn" class="btn outline">
+              <i class="fas fa-tag"></i>
+              <span>Add Category</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- Main content area -->
+    <main class="app-main">
+      <div class="notes-container" id="notesContainer">
+        <!-- Notes will be dynamically inserted here -->
+        <div class="empty-state">
+          <i class="fas fa-book"></i>
+          <h3>No Notes Yet</h3>
+          <p>Create your first note to get started</p>
+          <button id="emptyAddNoteBtn" class="btn primary">
+            <i class="fas fa-plus"></i>
+            <span>Add Note</span>
+          </button>
+        </div>
+      </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="app-footer">
+      <div class="footer-content">
+        <div class="about-section">
+          <h4>About NotesFlow</h4>
+          <p>A simple, modern notes app to organize your thoughts and ideas.</p>
+        </div>
+        <div class="footer-links">
+          <a href="#"><i class="fab fa-github"></i></a>
+          <a href="#"><i class="fab fa-twitter"></i></a>
+          <a href="#"><i class="fas fa-envelope"></i></a>
+        </div>
+        <p class="copyright">&copy; 2023 NotesFlow. All rights reserved.</p>
+      </div>
+    </footer>
+  </div>
+
+  <!-- Add Note Modal -->
+  <div class="modal" id="noteModal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3>Add New Note</h3>
+        <button class="close-btn" id="closeNoteModal">&times;</button>
+      </div>
+      <form id="noteForm">
+        <div class="form-group">
+          <label for="noteTitle">Title</label>
+          <input type="text" id="noteTitle" required>
+        </div>
+        <div class="form-group">
+          <label for="noteContent">Content</label>
+          <textarea id="noteContent" rows="5"></textarea>
+        </div>
+        <div class="form-group">
+          <label for="noteCategory">Category</label>
+          <select id="noteCategory">
+            <!-- Categories will be added dynamically -->
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="fileUpload">Attach File </label>
+          <input type="file" id="fileUpload" accept=".pdf,.doc,.docx,.txt,.jpg,.png">
+          <small class="file-info">Max size: 5MB</small>
+        </div>
+        <div class="form-actions">
+          <button type="button" class="btn outline" id="cancelNoteBtn">Cancel</button>
+          <button type="submit" class="btn primary">Save Note</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Add Category Modal -->
+  <div class="modal" id="categoryModal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3>Add New Category</h3>
+        <button class="close-btn" id="closeCategoryModal">&times;</button>
+      </div>
+      <form id="categoryForm">
+        <div class="form-group">
+          <label for="categoryName">Category Name</label>
+          <input type="text" id="categoryName" required>
+        </div>
+        <div class="form-actions">
+          <button type="button" class="btn outline" id="cancelCategoryBtn">Cancel</button>
+          <button type="submit" class="btn primary">Add Category</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script src="home.js"></script>
+</body>
+</html>
