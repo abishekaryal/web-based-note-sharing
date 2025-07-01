@@ -25,9 +25,40 @@
         <i class="fas fa-eye toggle-password"></i>
       </div>
       <button type="submit">Login</button>
-      <p>Don't have an account? <a href="#">Sign up</a></p>
+      <p>Don't have an account? <a href="#" id="signupLink">Sign up</a></p>
     </form>
   </div>
+
+  <!-- Signup Modal -->
+  <div class="modal" id="signupModal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3>Create Account</h3>
+        <button class="close-btn" id="closeSignupModal">&times;</button>
+      </div>
+      <form id="signupForm">
+        <div class="input-group">
+          <i class="fas fa-user"></i>
+          <input type="text" id="signupUsername" placeholder="Username" required>
+        </div>
+        <div class="input-group">
+          <i class="fas fa-envelope"></i>
+          <input type="email" id="signupEmail" placeholder="Email" required>
+        </div>
+        <div class="input-group">
+          <i class="fas fa-lock"></i>
+          <input type="password" id="signupPassword" placeholder="Password" required>
+          <i class="fas fa-eye toggle-password"></i>
+        </div>
+        <button type="submit">Sign Up</button>
+        <div class="social-login">
+          <p>- OR -</p>
+          <button type="button" class="google-btn"><i class="fab fa-google"></i> Continue with Google</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
   <script src="script.js"></script>
 </body>
 </html>
