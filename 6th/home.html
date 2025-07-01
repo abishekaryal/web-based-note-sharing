@@ -28,30 +28,43 @@
               <i class="fas fa-plus"></i>
               <span>Add Note</span>
             </button>
-            <button id="addCategoryBtn" class="btn outline">
-              <i class="fas fa-tag"></i>
-              <span>Add Category</span>
-            </button>
-          </div>
+            </div>
         </div>
       </div>
     </header>
 
-    <!-- Main content area -->
-    <main class="app-main">
-      <div class="notes-container" id="notesContainer">
-        <!-- Notes will be dynamically inserted here -->
-        <div class="empty-state">
-          <i class="fas fa-book"></i>
-          <h3>No Notes Yet</h3>
-          <p>Create your first note to get started</p>
-          <button id="emptyAddNoteBtn" class="btn primary">
+    <!-- App Body -->
+    <div class="app-body">
+      <!-- Sidebar for folders -->
+      <aside class="sidebar">
+        <div class="sidebar-header">
+          <h3>Folders</h3>
+          <button id="addFolderBtn" class="btn primary">
             <i class="fas fa-plus"></i>
-            <span>Add Note</span>
+            <span>Add Folder</span>
           </button>
         </div>
-      </div>
-    </main>
+        <ul class="folder-list" id="folderList">
+          <!-- Folders will be dynamically inserted here -->
+        </ul>
+      </aside>
+
+      <!-- Main content area -->
+      <main class="app-main">
+        <div class="notes-container" id="notesContainer">
+          <!-- Notes will be dynamically inserted here -->
+          <div class="empty-state">
+            <i class="fas fa-book"></i>
+            <h3>No Notes Yet</h3>
+            <p>Create your first note to get started</p>
+            <button id="emptyAddNoteBtn" class="btn primary">
+              <i class="fas fa-plus"></i>
+              <span>Add Note</span>
+            </button>
+          </div>
+        </div>
+      </main>
+    </div>
 
     <!-- Footer -->
     <footer class="app-footer">
@@ -87,9 +100,9 @@
           <textarea id="noteContent" rows="5"></textarea>
         </div>
         <div class="form-group">
-          <label for="noteCategory">Category</label>
-          <select id="noteCategory">
-            <!-- Categories will be added dynamically -->
+          <label for="noteFolder">Folder</label>
+          <select id="noteFolder">
+            <!-- Folders will be added dynamically -->
           </select>
         </div>
         <div class="form-group">
@@ -105,21 +118,21 @@
     </div>
   </div>
 
-  <!-- Add Category Modal -->
-  <div class="modal" id="categoryModal">
+  <!-- Add Folder Modal -->
+  <div class="modal" id="folderModal">
     <div class="modal-content">
       <div class="modal-header">
-        <h3>Add New Category</h3>
-        <button class="close-btn" id="closeCategoryModal">&times;</button>
+        <h3>Add New Folder</h3>
+        <button class="close-btn" id="closeFolderModal">&times;</button>
       </div>
-      <form id="categoryForm">
+      <form id="folderForm">
         <div class="form-group">
-          <label for="categoryName">Category Name</label>
-          <input type="text" id="categoryName" required>
+          <label for="folderName">Folder Name</label>
+          <input type="text" id="folderName" required>
         </div>
         <div class="form-actions">
-          <button type="button" class="btn outline" id="cancelCategoryBtn">Cancel</button>
-          <button type="submit" class="btn primary">Add Category</button>
+          <button type="button" class="btn outline" id="cancelFolderBtn">Cancel</button>
+          <button type="submit" class="btn primary">Add Folder</button>
         </div>
       </form>
     </div>

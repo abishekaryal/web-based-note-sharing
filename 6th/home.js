@@ -4,27 +4,28 @@ const elements = {
   searchInput: document.getElementById('searchInput'),
   addNoteBtn: document.getElementById('addNoteBtn'),
   emptyAddNoteBtn: document.getElementById('emptyAddNoteBtn'),
-  addCategoryBtn: document.getElementById('addCategoryBtn'),
+  addFolderBtn: document.getElementById('addFolderBtn'),
   noteModal: document.getElementById('noteModal'),
-  categoryModal: document.getElementById('categoryModal'),
+  folderModal: document.getElementById('folderModal'),
   closeNoteModal: document.getElementById('closeNoteModal'),
-  closeCategoryModal: document.getElementById('closeCategoryModal'),
+  closeFolderModal: document.getElementById('closeFolderModal'),
   cancelNoteBtn: document.getElementById('cancelNoteBtn'),
-  cancelCategoryBtn: document.getElementById('cancelCategoryBtn'),
+  cancelFolderBtn: document.getElementById('cancelFolderBtn'),
   noteForm: document.getElementById('noteForm'),
-  categoryForm: document.getElementById('categoryForm'),
+  folderForm: document.getElementById('folderForm'),
   noteTitle: document.getElementById('noteTitle'),
   noteContent: document.getElementById('noteContent'),
-  noteCategory: document.getElementById('noteCategory'),
-  categoryName: document.getElementById('categoryName'),
-  fileUpload: document.getElementById('fileUpload')
+  noteFolder: document.getElementById('noteFolder'),
+  folderName: document.getElementById('folderName'),
+  fileUpload: document.getElementById('fileUpload'),
+  folderList: document.getElementById('folderList')
 };
 
 // App State
 const state = {
   notes: [],
-  categories: [],
-  activeCategory: "all",
+  folders: [],
+  activeFolder: "all",
   searchQuery: "",
   currentFile: null,
   editingNoteId: null,
@@ -41,25 +42,26 @@ function initApp() {
 // Data Management
 function loadData() {
   const savedNotes = localStorage.getItem('notes');
-  const savedCategories = localStorage.getItem('categories');
+  const savedFolders = localStorage.getItem('folders');
   
   if (savedNotes) state.notes = JSON.parse(savedNotes);
-  if (savedCategories) state.categories = JSON.parse(savedCategories);
+  if (savedFolders) state.folders = JSON.parse(savedFolders);
   
   if (state.notes.length === 0) {
-    addNote("Welcome to NotesFlow", "This is your first note. You can edit or delete it.", "general");
+    addNote("Welcome to NotesFlow", "This is your first note. You can edit or delete it.", "General");
   }
 }
 
 function saveData() {
   localStorage.setItem('notes', JSON.stringify(state.notes));
-  localStorage.setItem('categories', JSON.stringify(state.categories));
+  localStorage.setItem('folders', JSON.stringify(state.folders));
 }
 
 // Rendering Functions
 function render() {
   renderNotes();
-  renderCategoryOptions();
+  renderFolders();
+  renderFolderOptions();
 }
 
 function renderNotes() {
@@ -86,7 +88,6 @@ function renderNotes() {
     <div class="note-card" data-id="${note.id}">
       <div class="note-header">
         <h3 class="note-title">${note.title}</h3>
-        ${note.category ? `<span class="note-category">${note.category}</span>` : ''}
       </div>
       ${note.content ? `<p class="note-content">${note.content}</p>` : ''}
       ${note.file ? renderFileAttachment(note.file) : ''}
@@ -118,9 +119,27 @@ function renderFileAttachment(file) {
   `;
 }
 
-function renderCategoryOptions() {
-  elements.noteCategory.innerHTML = state.categories.map(category => `
-    <option value="${category}">${category}</option>
+function renderFolders() {
+  elements.folderList.innerHTML = `
+    <li class="${state.activeFolder === 'all' ? 'active' : ''}" data-folder="all">
+      <i class="fas fa-inbox"></i>
+      <span>All Notes</span>
+    </li>
+    ${state.folders.map(folder => `
+      <li class="${state.activeFolder === folder ? 'active' : ''}" data-folder="${folder}">
+        <i class="fas fa-folder"></i>
+        <span>${folder}</span>
+        <button class="delete-folder-btn" data-folder="${folder}" title="Delete Folder">
+          <i class="fas fa-trash-alt"></i>
+        </button>
+      </li>
+    `).join('')}
+  `;
+}
+
+function renderFolderOptions() {
+  elements.noteFolder.innerHTML = state.folders.map(folder => `
+    <option value="${folder}">${folder}</option>
   `).join('');
 }
 
@@ -135,13 +154,13 @@ function getFilteredNotes() {
   return state.notes.filter(note => {
     const matchesSearch = note.title.toLowerCase().includes(state.searchQuery.toLowerCase()) || 
                         (note.content && note.content.toLowerCase().includes(state.searchQuery.toLowerCase()));
-    const matchesCategory = state.activeCategory === "all" || note.category === state.activeCategory;
-    return matchesSearch && matchesCategory;
+    const matchesFolder = state.activeFolder === "all" || note.folder === state.activeFolder;
+    return matchesSearch && matchesFolder;
   });
 }
 
 // Core Functions
-function addNote(title, content, category, file = null) {
+function addNote(title, content, folder, file = null) {
   if (!file) {
     alert('Please attach a file to your note');
     return false;
@@ -151,7 +170,7 @@ function addNote(title, content, category, file = null) {
     id: Date.now(),
     title,
     content,
-    category,
+    folder,
     date: new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }),
     file: createFileObject(file)
   };
@@ -182,15 +201,26 @@ function deleteNote(id) {
   render();
 }
 
-function addCategory(name) {
-  const categoryName = name.trim();
-  if (categoryName && !state.categories.includes(categoryName)) {
-    state.categories.push(categoryName);
+function addFolder(name) {
+  const folderName = name.trim();
+  if (folderName && !state.folders.includes(folderName)) {
+    state.folders.push(folderName);
     saveData();
-    renderCategoryOptions();
+    renderFolders();
+    renderFolderOptions();
     return true;
   }
   return false;
+}
+
+function deleteFolder(folderName) {
+  state.folders = state.folders.filter(folder => folder !== folderName);
+  state.notes = state.notes.filter(note => note.folder !== folderName);
+  if (state.activeFolder === folderName) {
+    state.activeFolder = "all";
+  }
+  saveData();
+  render();
 }
 
 function handleFileUpload(file) {
@@ -229,14 +259,14 @@ function openNoteModal() {
   elements.noteModal.style.display = 'flex';
 }
 
-function openCategoryModal() {
-  elements.categoryForm.reset();
-  elements.categoryModal.style.display = 'flex';
+function openFolderModal() {
+  elements.folderForm.reset();
+  elements.folderModal.style.display = 'flex';
 }
 
 function closeModals() {
   elements.noteModal.style.display = 'none';
-  elements.categoryModal.style.display = 'none';
+  elements.folderModal.style.display = 'none';
   resetNoteForm();
 }
 
@@ -253,7 +283,7 @@ function handleEditNote(noteId) {
   if (note) {
     elements.noteTitle.value = note.title;
     elements.noteContent.value = note.content || '';
-    elements.noteCategory.value = note.category || '';
+    elements.noteFolder.value = note.folder || '';
     
     if (note.file) {
       state.currentFile = {
@@ -304,14 +334,14 @@ function initEventListeners() {
   elements.addNoteBtn.addEventListener('click', openNoteModal);
   elements.emptyAddNoteBtn?.addEventListener('click', openNoteModal);
 
-  // Add category button
-  elements.addCategoryBtn.addEventListener('click', openCategoryModal);
+  // Add folder button
+  elements.addFolderBtn.addEventListener('click', openFolderModal);
 
   // Modal close buttons
   elements.closeNoteModal.addEventListener('click', closeModals);
-  elements.closeCategoryModal.addEventListener('click', closeModals);
+  elements.closeFolderModal.addEventListener('click', closeModals);
   elements.cancelNoteBtn.addEventListener('click', closeModals);
-  elements.cancelCategoryBtn.addEventListener('click', closeModals);
+  elements.cancelFolderBtn.addEventListener('click', closeModals);
 
   // File upload handling
   elements.fileUpload.addEventListener('change', (e) => {
@@ -340,7 +370,7 @@ function initEventListeners() {
     e.preventDefault();
     const title = elements.noteTitle.value.trim();
     const content = elements.noteContent.value.trim();
-    const category = elements.noteCategory.value || null;
+    const folder = elements.noteFolder.value || null;
     
     if (!title) {
       alert('Please enter a title for your note');
@@ -356,30 +386,30 @@ function initEventListeners() {
       updateNote(state.editingNoteId, { 
         title, 
         content: content || null, 
-        category,
+        folder,
         file: state.currentFile 
       });
     } else {
-      addNote(title, content || null, category, state.currentFile);
+      addNote(title, content || null, folder, state.currentFile);
     }
     
     closeModals();
   });
 
-  // Category form submission
-  elements.categoryForm.addEventListener('submit', (e) => {
+  // Folder form submission
+  elements.folderForm.addEventListener('submit', (e) => {
     e.preventDefault();
-    const categoryName = elements.categoryName.value.trim();
+    const folderName = elements.folderName.value.trim();
     
-    if (!categoryName) {
-      alert('Please enter a category name');
+    if (!folderName) {
+      alert('Please enter a folder name');
       return;
     }
 
-    if (addCategory(categoryName)) {
+    if (addFolder(folderName)) {
       closeModals();
     } else {
-      alert('Category already exists or is invalid!');
+      alert('Folder already exists or is invalid!');
     }
   });
 
@@ -401,9 +431,25 @@ function initEventListeners() {
     }
   });
 
+  // Folder selection
+  elements.folderList.addEventListener('click', (e) => {
+    const folderItem = e.target.closest('li');
+    const deleteBtn = e.target.closest('.delete-folder-btn');
+
+    if (deleteBtn) {
+      const folderName = deleteBtn.dataset.folder;
+      if (confirm(`Are you sure you want to delete the "${folderName}" folder and all its notes?`)) {
+        deleteFolder(folderName);
+      }
+    } else if (folderItem) {
+      state.activeFolder = folderItem.dataset.folder;
+      render();
+    }
+  });
+
   // Close modal when clicking outside
   window.addEventListener('click', (e) => {
-    if (e.target === elements.noteModal || e.target === elements.categoryModal) {
+    if (e.target === elements.noteModal || e.target === elements.folderModal) {
       closeModals();
     }
   });
