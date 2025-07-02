@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NotesFlow</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="home.css">
+</head>
+<body>
+  <div class="app-container">
+    <!-- Header with search and actions -->
+    <header class="app-header">
+      <div class="header-content">
+        <div class="logo">
+          <i class="fas fa-book-open"></i>
+          <h1>NotesFlow</h1>
+        </div>
+        
+        <div class="header-actions">
+          <div class="search-box">
+            <i class="fas fa-search"></i>
+            <input type="text" id="searchInput" placeholder="Search notes...">
+          </div>
+          
+          <div class="action-buttons">
+            <button id="addNoteBtn" class="btn primary">
+              <i class="fas fa-plus"></i>
+              <span>Add Note</span>
+            </button>
+            </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- App Body -->
+    <div class="app-body">
+      <!-- Sidebar for folders -->
+      <aside class="sidebar">
+        <div class="sidebar-header">
+          <h3>Folders</h3>
+          <button id="addFolderBtn" class="btn primary">
+            <i class="fas fa-plus"></i>
+            <span>Add Folder</span>
+          </button>
+        </div>
+        <ul class="folder-list" id="folderList">
+          <!-- Folders will be dynamically inserted here -->
+        </ul>
+      </aside>
+
+      <!-- Main content area -->
+      <main class="app-main">
+        <div class="notes-container" id="notesContainer">
+          <!-- Notes will be dynamically inserted here -->
+          <div class="empty-state">
+            <i class="fas fa-book"></i>
+            <h3>No Notes Yet</h3>
+            <p>Create your first note to get started</p>
+            <button id="emptyAddNoteBtn" class="btn primary">
+              <i class="fas fa-plus"></i>
+              <span>Add Note</span>
+            </button>
+          </div>
+        </div>
+      </main>
+    </div>
+
+    <!-- Footer -->
+    <footer class="app-footer">
+      <div class="footer-content">
+        <div class="about-section">
+          <h4>About NotesFlow</h4>
+          <p>A simple, modern notes app to organize your thoughts and ideas.</p>
+        </div>
+        <div class="footer-links">
+          <a href="#"><i class="fab fa-github"></i></a>
+          <a href="#"><i class="fab fa-twitter"></i></a>
+          <a href="#"><i class="fas fa-envelope"></i></a>
+        </div>
+        <p class="copyright">&copy; 2023 NotesFlow. All rights reserved.</p>
+      </div>
+    </footer>
+  </div>
+
+  <!-- Add Note Modal -->
+  <div class="modal" id="noteModal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3>Add New Note</h3>
+        <button class="close-btn" id="closeNoteModal">&times;</button>
+      </div>
+      <form id="noteForm">
+        <div class="form-group">
+          <label for="noteTitle">Title</label>
+          <input type="text" id="noteTitle" required>
+        </div>
+        <div class="form-group">
+          <label for="noteContent">Content</label>
+          <textarea id="noteContent" rows="5"></textarea>
+        </div>
+        <div class="form-group">
+          <label for="noteFolder">Folder</label>
+          <select id="noteFolder">
+            <!-- Folders will be added dynamically -->
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="fileUpload">Attach File </label>
+          <input type="file" id="fileUpload" accept=".pdf,.doc,.docx,.txt,.jpg,.png">
+          <small class="file-info">Max size: 5MB</small>
+        </div>
+        <div class="form-actions">
+          <button type="button" class="btn outline" id="cancelNoteBtn">Cancel</button>
+          <button type="submit" class="btn primary">Save Note</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Add Folder Modal -->
+  <div class="modal" id="folderModal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3>Add New Folder</h3>
+        <button class="close-btn" id="closeFolderModal">&times;</button>
+      </div>
+      <form id="folderForm">
+        <div class="form-group">
+          <label for="folderName">Folder Name</label>
+          <input type="text" id="folderName" required>
+        </div>
+        <div class="form-actions">
+          <button type="button" class="btn outline" id="cancelFolderBtn">Cancel</button>
+          <button type="submit" class="btn primary">Add Folder</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script src="home.js"></script>
+</body>
+</html>
